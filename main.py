@@ -5,54 +5,99 @@ import string
 import asyncio
 import sys
 import os
+import platform
 import pytesseract
 import dxcam
 import random
 
-from PIL import Image
+from PIL import ImageGrab, Image
 
 from buttplug import *
 
-x = 2560 // 2 - 70
-y = 1440 // 2 + 350
+platform = platform.system()
 
-xoff, yoff = 140, 55
+# Checking resolution
+if platform == 'Linux':
+    resolution_raw = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0].split()[0].split(b'x')
+    resolution = (int(resolution[0].decode('UTF-8')),int(resolution[1].decode('UTF-8'))) 
+elif platform == 'Windows':
+    resolution = (2560,1440)
+else:
+    logging.error("Detected incompatible operating system! Currently supported operating systems are:\nLinux and Windows")
+
 
 UBER_ACTIVE_STRENGTH = 0.2
 UBER_THRESHOLD_BUZZ = 0.3
 
 rcon_port = 2541
 
+def uber_image_grabber():
+    if platform == 'Linux':
+        # Setting screenshot region for Linux
+        if resolution == (1920, 1080):
+            ss_region = (1200,700,1500,900)
+        elif resolution == (2560, 1440):
+            ss_region = (1210, 1070, 1350, 1125)
+        else
+            logging.error("Detected incompatible resolution! Currently supported resolutions are:\n1920x1080 and 2560x1440")
+        # Taking the screenshot
+        return ImageGrab.grab(ss_region)
+    elif platform == 'Windows':
+        # TODO
 
-def uber_percentage_grabber(dxc):
-    frame = dxc.grab(region=(x, y, x + xoff, y + yoff))
-    if frame is None:
-        print("No new image!")
+
+# Creating the pixel dictionary
+# TODO
+number_pixel_dict = {
+    0:[] 
+    10:[]
+    20:[]
+    30:[]
+    40:[]
+    50:[]
+    60:[]
+    70:[]
+    80:[]
+    90:[]
+    100:[]
+}
+
+
+def uber_percentage_grabber(dxc=None):
+    if platform == 'Linux':
+        img = ImageGrab.grab(ss_region)
+        px = img.load()
+        # TODO
+
+    elif platform == 'Windows':
+        frame = dxc.grab(region=(x, y, x + xoff, y + yoff))
+        if frame is None:
+            print("No new image!")
+            return None
+
+        img = Image.fromarray(frame)
+
+        img.save("screencap.png")
+
+        uber_str = pytesseract.image_to_string(img, config="--psm 8").strip()
+
+        if uber_str:
+            if uber_str[-1] == "%":
+                try:
+                    uber_int = int(uber_str[:-1])
+                    if 0 <= uber_int <= 100:
+                        return uber_int
+                    return None
+                except:
+                    print("bad int")
+                    return None
+            else:
+                print("no %")
         return None
-
-    img = Image.fromarray(frame)
-
-    img.save("screencap.png")
-
-    uber_str = pytesseract.image_to_string(img, config="--psm 8").strip()
-
-    if uber_str:
-        if uber_str[-1] == "%":
-            try:
-                uber_int = int(uber_str[:-1])
-                if 0 <= uber_int <= 100:
-                    return uber_int
-                return None
-            except:
-                print("bad int")
-                return None
-        else:
-            print("no %")
-    return None
 
 
 tf2_game_executable = "E:\\Programs\\Steam\\steamapps\\common\\Team Fortress 2\\hl2.exe"
-
+# TODO: Linux directory
 
 async def main():
     client = Client("TF2 Healsluttery")
