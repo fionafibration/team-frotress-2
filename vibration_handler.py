@@ -3,11 +3,13 @@ from config import *
 
 
 class VibrationHandler:
-    def __init__(self, logger):
+    def __init__(self, logger, rcon):
         self.logger = logger
+        self.rcon = rcon
         self.uber_strength = 0  # uber active strength
         self.timed_buzzes = []  # list of timed vibration activations
         self._curr_strength = 0  # current strength priv variable
+        self.last_strength = 0
         self.killstreak = 0  # killstreak tracking
         self.uberstreak = 0
 
@@ -62,6 +64,7 @@ class VibrationHandler:
         self.uberstreak += 1
 
     def update(self):
+        self.last_strength = self.current_strength
         self._curr_strength = BASE_VIBE
 
         now = time.time()
@@ -73,6 +76,13 @@ class VibrationHandler:
         self.current_strength = self.uber_strength
 
         self.timed_buzzes = list(filter(lambda x: x[1] > now, self.timed_buzzes))
+
+        if self.current_strength > BASE_VIBE and self.last_strength <= BASE_VIBE
+            if ACTIVATE_COMMAND:
+                self.rcon.execute(ACTIVATE_COMMAND)
+        elif self.current_strength <= BASE_VIBE and self.last_strength > BASE_VIBE
+            if DEACTIVATE_COMMAND:
+                self.rcon.execute(DEACTIVATE_COMMAND)
 
         return self.current_strength
 
