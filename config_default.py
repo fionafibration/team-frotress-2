@@ -9,13 +9,18 @@ ENABLE_WEAPONSWITCH = True
 
 UPDATE_SPEED = 5  # Speed in updates per second, values higher than 10 are not recommended for performance
 
-KILL_STRENGTH = 0.5  # Base kill vibration strength (0 to disable)
+BASE_VIBE = 0.0
+
+KILL_STRENGTH = 0.3  # Base kill vibration strength (0 to disable)
 KILL_TIME = 1  # Kill vibration time
+
+KILL_CRIT_STRENGTH_MULTIPLIER = 2.0  # Crit kill vibration multiplier
+KILL_CRIT_TIME_MULTIPLIER = 1.0  # Crit kill time multiplier
 
 # When at KILLSTREAK_MAX, vibration strength is KILL_STRENGTH * KILLSTREAK_STRENGTH_MULTIPLIER
 # When you get first kill, vibration strength is KILL_STRENGTH * 1.0
-KILLSTREAK_STRENGTH_MULTIPLIER = 1.4  # Amount that reaching KILLSTREAK_MAX should multiply strength
-KILLSTREAK_TIME_MULTIPLIER = 3  # Amount that reaching KILLSTREAK_MAX should multiply time
+KILLSTREAK_STRENGTH_MULTIPLIER = 2  # Amount that reaching KILLSTREAK_MAX should multiply strength
+KILLSTREAK_TIME_MULTIPLIER = 1.5  # Amount that reaching KILLSTREAK_MAX should multiply time
 
 KILLSTREAK_MAX = 20  # Max killstreak for scaling
 
@@ -23,8 +28,9 @@ DEATH_STRENGTH = 0  # Death vibration strength
 DEATH_TIME = 0  # Death vibration time
 
 UBER_ACTIVE_STRENGTH = 0.5  # Uber activation vibration strength (0 to disable)
+UBER_STREAK_MULTIPLIER = 1.1  # Multipies uber strength by this per uber
 
-UBER_MILESTONES = [25, 50, 75]
+UBER_MILESTONES = [25, 50, 75, 99]
 UBER_MILESTONE_STRENGTH = 0.2  # Uber milestone passed vibration strength (0 to disable)
 UBER_MILESTONE_TIME = 1  # Uber milestone vibration time
 

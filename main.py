@@ -121,17 +121,18 @@ def uber_percentage_grabber(dxc):
     # Count filled vs. background bar pixels
     count = 0
     cocount = 0
-    for i in range(1, bar_width - 1):
+    for i in range(1, bar_width - 2):
         pixel = img.getpixel((i, 2))
         if pixel == (255, 255, 255) or pixel == (200, 226, 255):
             count += 1
-        elif pixel == (53, 53, 53):
+        if pixel == (53, 53, 53):
             cocount += 1
 
-    if (count + cocount) == 0:
+    if count + cocount != 337:
         return None
 
-    uber_percent = count / (count + cocount)
+    uber_percent = count / (bar_width - 3)
+    print(uber_percent)
     uber_percent = round(uber_percent * 100)
     assert (0 <= uber_percent <= 100)
     return uber_percent
@@ -153,7 +154,7 @@ async def main(rcon, logfile, dxc=None):
 
     client.logger.info("Connected to Intiface!")
 
-    if len(client.devices) != 0:
+    """if len(client.devices) != 0:
         device = client.devices[0]
 
         if len(device.actuators) != 0:
@@ -164,8 +165,8 @@ async def main(rcon, logfile, dxc=None):
             return
 
         await asyncio.sleep(1)
-        await device.actuators[0].command(0)
-    else:
+        await device.actuators[0].command(0)"""
+    if len(client.devices) == 0:
         logging.error("No devices!")
         return
 
@@ -197,11 +198,42 @@ async def main(rcon, logfile, dxc=None):
     curr_class = ""
     curr_weapon = -1
 
-    vibe = vibration_handler.VibrationHandler()
+    vibe = vibration_handler.VibrationHandler(logging)
 
     while True:
+        # detect kills from console output
+        while True:
+            line = console.read_line()
+            if line is None:
+                break
+
+            if switch_match := re.match("""\d\d\/\d\d\/\d\d\d\d - \d\d:\d\d:\d\d: teamfrotress_(\w+)""", line):
+                if switch_match[1] in ["scout", "soldier", "pyro", "heavyweapons", "demoman", "engineer", "medic",
+                                       "sniper",
+                                       "spy"]:
+                    curr_class = switch_match[1]
+                    logging.info(f"New class: {curr_class}")
+                    vibe.killstreak = 0
+                    vibe.uberstreak = 0
+
+                elif switch_match[1] in ["slot1", "slot2", "slot3"]:
+                    curr_weapon = int(switch_match[1][-1])
+
+            if killfeed_match := re.match(
+                    """\d\d\/\d\d\/\d\d\d\d - \d\d:\d\d:\d\d: ([^\n]{0,32}) killed ([^\n]{0,32}) with (\w+)\. ?(\(crit\))?""",
+                    line):
+
+                if killfeed_match[1] == name:  # we got a kill
+                    logging.info(
+                        f"Kill logged, streak: {vibe.killstreak}{', crit' if killfeed_match[4] is not None else ''}")
+                    vibe.kill(killfeed_match[4] is not None)
+                if killfeed_match[2] == name:  # we died :(
+                    logging.info("Death logged")
+                    vibe.death()
+
         if curr_class == "medic" and curr_weapon == 2:
             uber_grabbed = uber_percentage_grabber(dxc)
+            logging.info(f"New uber: {uber_grabbed}")
         else:
             uber_grabbed = None
 
@@ -225,36 +257,6 @@ async def main(rcon, logfile, dxc=None):
                 logging.info("Uber ended!")
                 currently_ubered = False
                 vibe.end_uber()
-
-        # detect kills from console output
-        while True:
-            line = console.read_line()
-            if line is None:
-                break
-
-            if switch_match := re.match("""\d\d\/\d\d\/\d\d\d\d - \d\d:\d\d:\d\d: teamfrotress_(\w+)""", line):
-                if switch_match[1] in ["scout", "soldier", "pyro", "heavyweapons", "demoman", "engineer", "medic",
-                                       "sniper",
-                                       "spy"]:
-                    curr_class = switch_match[1]
-                    logging.info(f"New class: {curr_class}")
-                    vibe.killstreak = 0
-                    
-                elif switch_match[1] in ["slot1", "slot2", "slot3"]:
-                    curr_weapon = int(switch_match[1][-1])
-                    logging.info(f"Changed weapon to slot {curr_weapon}")
-
-            if killfeed_match := re.match(
-                    """\d\d\/\d\d\/\d\d\d\d - \d\d:\d\d:\d\d: ([^\n]{0,32}) killed ([^\n]{0,32}) with (\w+)(\.|(\. \(crit\)))""",
-                    line):
-
-                if killfeed_match[1] == name:  # we got a kill
-                    logging.info(f"Kill logged, streak: {vibe.killstreak}")
-
-                    vibe.kill()
-                if killfeed_match[2] == name:  # we died :(
-                    logging.info("Death logged")
-                    vibe.death()
 
         await vibe.run_buzz(devices=client.devices)
 
