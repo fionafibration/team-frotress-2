@@ -6,6 +6,8 @@ Linux suppport is currently slightly broken pending further testing
 
 Uber tracking requires the use of the OMPHUD-sexy edit
 
+WARNING - Use only in private lobbies / servers with consenting players, and test your strengths before using them. The default values are ad-hoc and not suitable for every person or device
+
 # Features
 - Custom vibration strength and time for kills, death, using Uber, and passing milestones of Ubercharge percent
 - Multipliers for critical kills, killstreaks, and "Uberstreaks"
