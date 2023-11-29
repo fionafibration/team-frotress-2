@@ -301,6 +301,7 @@ if __name__ == "__main__":
         dxc = None
 
     print("Ensure Intiface Central is running and has your device connected, then press enter")
+    input()
 
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
