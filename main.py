@@ -22,10 +22,11 @@ if platform == "Windows":
     import dxcam
 
 if not os.path.isfile("config.py"):
-    print("Copy config_default.py to config.py and change to set up!")
+    print("Copy config_default.py to config.py and edit it to set up!")
     exit()
 
 # Checking resolution and setting screenshot regions for uber bar
+# Currently WIP, want to add 2560x1440 support but for now its hardcoded to 1920x1080
 if platform == 'Linux':
     resolution_raw = \
         subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4', shell=True, stdout=subprocess.PIPE).communicate()[
@@ -67,48 +68,13 @@ else:
 
 
 def uber_image_grabber(dxc=None, n=10, percentile=False):
-    """
-    INPUT: 
-        n=9
-            An integer, specifies which tenth is of interest. 
-            Defaults to 10, the last tenth.
-        percentile=False
-            A Boolean, specifies whether tenth is stopping point or not.
-            For example, (n=5, percintile=False) screenshots the first half
-            but (n=5, percentile=True) screenshots only the 40-49 region
-        
-    """
     if platform == "Linux":
-        if percentile:
-            return ImageGrab.grab(bar_left + bar_tenth * (n - 1), bar_top, bar_left + bar_tenth * (n), bar_bottom)
-        else:
-            return ImageGrab.grab(full_bar_region)
+        return ImageGrab.grab(full_bar_region)
     elif platform == "Windows":
         frame = None
         while frame is None:
             frame = dxc.grab(full_bar_region)
         return Image.fromarray(frame)
-
-
-"""
-Creating the pixel dictionary.
-Keys are the percentiles, values are their pixel ranges.
-TODO: WHY
-"""
-number_pixel_dict = {
-    1: [0, 0],
-    2: [0, 0],
-    3: [0, 0],
-    4: [0, 0],
-    5: [0, 0],
-    6: [0, 0],
-    7: [0, 0],
-    8: [0, 0],
-    9: [0, 0],
-    10: [0, 0],
-}
-for i in range(10):
-    number_pixel_dict[i + 1] = [bar_left + bar_tenth * (i), bar_left + +bar_tenth * (i + 1)]
 
 
 def uber_percentage_grabber(dxc):
@@ -121,27 +87,34 @@ def uber_percentage_grabber(dxc):
     # Count filled vs. background bar pixels
     count = 0
     cocount = 0
+
+    # we grab a little bit extra so clip it
     for i in range(1, bar_width - 2):
         pixel = img.getpixel((i, 2))
+        # normal and full charge colours respectively
         if pixel == (255, 255, 255) or pixel == (200, 226, 255):
             count += 1
+        # background colour
         if pixel == (53, 53, 53):
             cocount += 1
 
+    # Check to ensure nothing is occluding our
     if count + cocount != 337:
         return None
 
     uber_percent = count / (bar_width - 3)
     print(uber_percent)
     uber_percent = round(uber_percent * 100)
-    assert (0 <= uber_percent <= 100)
-    return uber_percent
+    if 0 <= uber_percent <= 100:
+        return uber_percent
+    else:
+        return None
 
 
 async def main(rcon, logfile, dxc=None):
     client = Client("Team Frotress 2")  # :3
 
-    connector = WebsocketConnector("ws://127.0.0.1:12345", logger=client.logger)
+    connector = WebsocketConnector(INTIFACE_SERVER_ADDR, logger=client.logger)
 
     console = log_tailer.LogTail(logfile)
     _ = console.read()
@@ -160,10 +133,12 @@ async def main(rcon, logfile, dxc=None):
 
     logging.info("Executing Team Frotress config files")
 
+    # enables class and weapon switch functionality
     rcon.execute("exec teamfrotress")
     if ENABLE_WEAPONSWITCH:
         rcon.execute("exec teamfrotress_switcher")
 
+    # get steam username to detect killfeed data
     name = None
     logging.info("Getting name...")
     while name is None:
@@ -189,7 +164,7 @@ async def main(rcon, logfile, dxc=None):
     vibe = vibration_handler.VibrationHandler(logging)
 
     while True:
-        # detect kills from console output
+        # detect kills & class / weapon switches from console log
         while True:
             line = console.read_line()
             if line is None:
@@ -219,7 +194,7 @@ async def main(rcon, logfile, dxc=None):
                     logging.info("Death logged")
                     vibe.death()
 
-        if curr_class == "medic" and curr_weapon == 2:
+        if curr_class == "medic" and curr_weapon == 2 or curr_weapon == 3:
             uber_grabbed = uber_percentage_grabber(dxc)
             logging.info(f"New uber: {uber_grabbed}")
         else:
@@ -246,6 +221,7 @@ async def main(rcon, logfile, dxc=None):
                 currently_ubered = False
                 vibe.end_uber()
 
+        # run vibrator
         await vibe.run_buzz(devices=client.devices)
 
         await asyncio.sleep(1.0 / UPDATE_SPEED)
@@ -274,7 +250,7 @@ if __name__ == "__main__":
 
     added_args = (
             " -game tf -steam -secure -usercon +developer 1 +alias developer +ip 0.0.0.0 +alias ip +sv_rcon_whitelist_address 127.0.0.1 +alias sv_rcon_whitelist_address +rcon_password " + rcon_password + " +alias rcon_password +hostport " + str(
-        RCON_PORT) + " +alias hostport +alias cl_reload_localization_files +net_start  +con_timestamp 1 +alias con_timestamp -condebug -conclearlog " + TF2_EXTRA_LAUNCH_OPTIONS).split()
+        RCON_PORT) + " +alias hostport +alias cl_reload_localization_files +net_start  +con_timestamp 1 +alias con_timestamp -condebug -conclearlog" + TF2_EXTRA_LAUNCH_OPTIONS).split()
     tf2_args.extend(added_args)
 
     subprocess.Popen(tf2_args)

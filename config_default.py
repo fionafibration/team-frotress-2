@@ -2,7 +2,9 @@ TF2_GAME_EXECUTABLE = "E:\\Programs\\Steam\\steamapps\\common\\Team Fortress 2\\
 TF2_CONSOLE_LOG = "E:\\Programs\\Steam\\steamapps\\common\\Team Fortress 2\\tf\\console.log"
 TF2_EXTRA_LAUNCH_OPTIONS = "-novid -nojoy -nosteamcontroller -nohltv -particles 1 -precachefontchars -noquicktime"
 
-RCON_PORT = 2541
+INTIFACE_SERVER_ADDR = "ws://127.0.0.1:12345"  # The address intiface central is listening on
+
+RCON_PORT = 2541  # Change if you have another port interfering
 
 # Binds custom weapon switching functionality to track weapon changes
 ENABLE_WEAPONSWITCH = True
