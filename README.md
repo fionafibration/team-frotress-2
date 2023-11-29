@@ -2,7 +2,7 @@
 
 Controls buttplug based on kills, deaths, and uber in Team Fortress 2
 
-Requires the use of the OMPHUD edit in the repository for Uber capturing!
+Requires the use of the OMPHUD edit in the repository for Uber capturing & other configuration details!
 
 # Setup
 
