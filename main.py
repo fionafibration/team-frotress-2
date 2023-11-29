@@ -154,18 +154,6 @@ async def main(rcon, logfile, dxc=None):
 
     client.logger.info("Connected to Intiface!")
 
-    """if len(client.devices) != 0:
-        device = client.devices[0]
-
-        if len(device.actuators) != 0:
-            await device.actuators[0].command(0.1)
-
-        else:
-            logging.error("No actuators!")
-            return
-
-        await asyncio.sleep(1)
-        await device.actuators[0].command(0)"""
     if len(client.devices) == 0:
         logging.error("No devices!")
         return
