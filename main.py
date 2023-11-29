@@ -153,8 +153,6 @@ async def main(rcon, logfile, dxc=None):
 
     client.logger.info("Connected to Intiface!")
 
-    client.logger.info(f"Devices: {client.devices}")
-
     if len(client.devices) != 0:
         device = client.devices[0]
 
@@ -167,8 +165,6 @@ async def main(rcon, logfile, dxc=None):
 
         await asyncio.sleep(1)
         await device.actuators[0].command(0)
-
-        input("Ready!\n")
     else:
         logging.error("No devices!")
         return
@@ -193,8 +189,7 @@ async def main(rcon, logfile, dxc=None):
 
     logging.info(f"Got name: {name}")
 
-    logging.info("Ready to play, press enter to begin")
-    input()
+    logging.info("Ready to play!")
 
     current_uber = 0
     last_uber = 0
@@ -205,7 +200,7 @@ async def main(rcon, logfile, dxc=None):
     vibe = vibration_handler.VibrationHandler()
 
     while True:
-        if curr_class == "medic":
+        if curr_class == "medic" and curr_weapon == 2:
             uber_grabbed = uber_percentage_grabber(dxc)
         else:
             uber_grabbed = None
@@ -216,7 +211,7 @@ async def main(rcon, logfile, dxc=None):
             current_uber = uber_grabbed
 
             # activate uber
-            if last_uber > current_uber and current_uber != 0:
+            if last_uber > current_uber != 0:
                 logging.info("Activated Uber!")
                 currently_ubered = True
                 vibe.start_uber()
@@ -236,22 +231,26 @@ async def main(rcon, logfile, dxc=None):
             line = console.read_line()
             if line is None:
                 break
-            if m := re.match("teamfrotress_(\w+)", line):
-                if m[1] in ["scout", "soldier", "pyro", "heavyweapons", "demoman", "engineer", "medic", "sniper",
-                            "spy"]:
-                    curr_class = m[1]
+
+            if switch_match := re.match("""\d\d\/\d\d\/\d\d\d\d - \d\d:\d\d:\d\d: teamfrotress_(\w+)""", line):
+                if switch_match[1] in ["scout", "soldier", "pyro", "heavyweapons", "demoman", "engineer", "medic",
+                                       "sniper",
+                                       "spy"]:
+                    curr_class = switch_match[1]
                     logging.info(f"New class: {curr_class}")
-                elif m[1] in ["slot1", "slot2", "slot3"]:
-                    curr_weapon = int(m[1][-1])
+                elif switch_match[1] in ["slot1", "slot2", "slot3"]:
+                    curr_weapon = int(switch_match[1][-1])
                     logging.info(f"Changed weapon to slot {curr_weapon}")
-            if m := re.match(
+
+            if killfeed_match := re.match(
                     """\d\d\/\d\d\/\d\d\d\d - \d\d:\d\d:\d\d: ([^\n]{0,32}) killed ([^\n]{0,32}) with (\w+)(\.|(\. \(crit\)))""",
                     line):
 
-                if m[1] == name:  # we got a kill
-                    logging.info("Kill logged")
+                if killfeed_match[1] == name:  # we got a kill
+                    logging.info(f"Kill logged, streak: {vibe.killstreak}")
+
                     vibe.kill()
-                if m[2] == name:  # we died :(
+                if killfeed_match[2] == name:  # we died :(
                     logging.info("Death logged")
                     vibe.death()
 

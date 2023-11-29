@@ -33,20 +33,21 @@ class VibrationHandler:
 
         self.timed_buzz(KILL_STRENGTH *
                         # [1, KILLSTREAK_STRENGTH_MULTIPLIER]
-                        (killstreak_coeff * (1 - KILLSTREAK_STRENGTH_MULTIPLIER) + 1),
+                        (killstreak_coeff * (KILLSTREAK_STRENGTH_MULTIPLIER - 1) + 1),
                         KILL_TIME *
                         # [1, KILLSTREAK_TIME_MULTIPLIER]
-                        (killstreak_coeff * (1 - KILLSTREAK_TIME_MULTIPLIER) + 1))
+                        (killstreak_coeff * (KILLSTREAK_TIME_MULTIPLIER - 1) + 1))
 
     def uber_milestone(self, uber_percent, last_uber_percent):
         for i, x in enumerate(UBER_MILESTONES):
             if uber_percent > x >= last_uber_percent:
+                print(f"Hit milestone {x}")
                 uber_milestone_coeff = i / len(UBER_MILESTONES) - 1
                 self.timed_buzz(
                     UBER_MILESTONE_STRENGTH *
-                    (uber_milestone_coeff * (1 - UBER_MILESTONE_STRENGTH_MULTIPLIER) + 1),
+                    (uber_milestone_coeff * (UBER_MILESTONE_STRENGTH_MULTIPLIER - 1) + 1),
                     UBER_MILESTONE_TIME *
-                    (uber_milestone_coeff * (1 - UBER_MILESTONES_TIME_MULTIPLIER) + 1)
+                    (uber_milestone_coeff * (UBER_MILESTONES_TIME_MULTIPLIER - 1) + 1)
                 )
 
     def start_uber(self):
@@ -66,7 +67,7 @@ class VibrationHandler:
 
         self.current_strength = self.uber_strength
 
-        self.timed_buzzes = list(filter(lambda x: x[1] < now, self.timed_buzzes))
+        self.timed_buzzes = list(filter(lambda x: x[1] > now, self.timed_buzzes))
 
         return self.current_strength
 
