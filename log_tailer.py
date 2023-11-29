@@ -42,4 +42,4 @@ if __name__ == '__main__':
         while True:
             while line := log.read(is_kill):
                 print(line, end='')
-            time.sleep(2)
+            time.sleep(0.5)
