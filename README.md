@@ -9,11 +9,12 @@ Uber tracking requires the use of the OMPHUD-sexy edit
 # Features
 - Custom vibration strength and time for kills, death, using Uber, and passing milestones of Ubercharge percent
 - Multipliers for critical kills, killstreaks, and "Uberstreaks"
-- Execute custom commands when vibration starts and stops
-- Planned support for further features involving config file scripting, such as weapon & class specific functionality
-- Planned suport for assist tracking features as well (if anyone knows a good way to do this please reach out!)
+- Execute custom TF2 console commands when vibration starts and stops
 
-# Planned features:
+# Planned features
+- Support for further features involving config file scripting, such as weapon & class specific functionality
+- Support for assist tracking features (if anyone knows a good way to do this please reach out!)
+
 # Setup
 
 Copy config_default.py to config.py and fill out your game executable and console.log paths (console.log will be in tf
