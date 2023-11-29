@@ -11,7 +11,10 @@ ENABLE_WEAPONSWITCH = True
 
 UPDATE_SPEED = 5  # Speed in updates per second, values higher than 10 are not recommended for performance
 
-BASE_VIBE = 0.0
+BASE_VIBE = 0.0  # Base vibration speed that motor will always be on
+
+ACTIVATE_COMMAND = ""  # TF2 console command to execute when vibrator is turned on
+DEACTIVATE_COMMAND = ""  # Command to execute when vibrator is turned off
 
 KILL_STRENGTH = 0.3  # Base kill vibration strength (0 to disable)
 KILL_TIME = 1  # Kill vibration time
