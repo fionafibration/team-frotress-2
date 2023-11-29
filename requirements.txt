@@ -1,4 +1,3 @@
-pytesseract
 dxcam
 python-valve
 buttplug-py
