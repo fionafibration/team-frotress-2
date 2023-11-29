@@ -9,7 +9,7 @@ Requires the use of the OMPHUD edit in the repository for Uber capturing & other
 Copy config_default.py to config.py and fill out your game executable and console.log paths (console.log will be in tf
 folder)
 
-Install OMPHUD-sexy on your game, make sure every class config has $<classname> in it somewhere, i.e. medic.cfg has a
+Install OMPHUD-sexy on your game, make sure every class config has $classname in it somewhere, i.e. medic.cfg has a
 line `$medic`, heavyweapons.cfg has a line `$heavyweapons`. 
 
 # More than one device or actuator
