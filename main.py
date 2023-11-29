@@ -238,6 +238,8 @@ async def main(rcon, logfile, dxc=None):
                                        "spy"]:
                     curr_class = switch_match[1]
                     logging.info(f"New class: {curr_class}")
+                    vibe.killstreak = 0
+                    
                 elif switch_match[1] in ["slot1", "slot2", "slot3"]:
                     curr_weapon = int(switch_match[1][-1])
                     logging.info(f"Changed weapon to slot {curr_weapon}")
