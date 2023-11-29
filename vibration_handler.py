@@ -24,7 +24,6 @@ class VibrationHandler:
 
     def timed_buzz(self, strength, time_end):
         self.timed_buzzes.append((strength, time.time() + time_end))
-        self.current_strength = strength
 
     def death(self):
         self.killstreak = 0
@@ -77,11 +76,15 @@ class VibrationHandler:
 
         self.timed_buzzes = list(filter(lambda x: x[1] > now, self.timed_buzzes))
 
-        if self.current_strength > BASE_VIBE and self.last_strength <= BASE_VIBE
-            if ACTIVATE_COMMAND:
+        print(self.current_strength, self.last_strength)
+
+        if self.current_strength > BASE_VIBE and self.last_strength <= BASE_VIBE:
+            if ACTIVATE_COMMAND != "":
+                self.logger.info("Running activate command")
                 self.rcon.execute(ACTIVATE_COMMAND)
-        elif self.current_strength <= BASE_VIBE and self.last_strength > BASE_VIBE
-            if DEACTIVATE_COMMAND:
+        if self.current_strength <= BASE_VIBE and self.last_strength > BASE_VIBE:
+            if DEACTIVATE_COMMAND != "":
+                self.logger.info("Running deactivate command")
                 self.rcon.execute(DEACTIVATE_COMMAND)
 
         return self.current_strength

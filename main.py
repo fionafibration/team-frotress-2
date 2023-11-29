@@ -196,7 +196,7 @@ async def main(rcon, logfile, dxc=None):
 
         if curr_class == "medic" and curr_weapon == 2 or curr_weapon == 3:
             uber_grabbed = uber_percentage_grabber(dxc)
-            logging.info(f"New uber: {uber_grabbed}")
+            # logging.info(f"New uber: {uber_grabbed}")
         else:
             uber_grabbed = None
 
