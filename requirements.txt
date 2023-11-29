@@ -2,4 +2,3 @@ pytesseract
 dxcam
 python-valve
 buttplug-py
-steamid-converter

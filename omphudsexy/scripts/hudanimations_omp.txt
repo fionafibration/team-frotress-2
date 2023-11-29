@@ -1,0 +1,305 @@
+event HudHealthBonusPulse
+{
+
+	
+	Animate PlayerStatusHealthValue			FgColor		"OmpHPBuff"	Accel 0.0 0.0
+	
+	Animate	TargetBG 	        BgColor		"OmpSpecHPBuff"        Accel 0.0 0.0
+    Animate	TargetBG 	        Alpha		"255"		        Accel 0.0 0.0
+	Animate	TargetBG 	        Alpha		"255"		        Accel 0.3 0.6 
+
+	RunEvent HudHealthBonusPulseLoop	0.4
+}
+
+// call to loop HudHealthBonusPulse
+event HudHealthBonusPulseLoop
+{
+	RunEvent HudHealthBonusPulse 0.0
+}
+
+event HudHealthBonusPulseStop
+{
+	Animate PlayerStatusHealthValue			FgColor		"OmpHP"		Accel 0.0 0.0
+	
+	Animate	TargetBG 	         BgColor		"OmpHP"	       Accel 0.0 0.0
+    Animate	TargetBG 	         Alpha		    "0"		           Accel 0.0 0.0
+
+	StopEvent HudHealthBonusPulse 0.0
+	StopEvent HudHealthBonusPulseLoop 0.0
+}
+
+event HudHealthDyingPulse
+{
+
+	
+	Animate PlayerStatusHealthValue			FgColor		"OmpHPLow"	Accel 0.0 0.0
+	
+	Animate TargetBG 	        BgColor		"OmpSpecHPLow"	    Accel 0.0 0.0
+    Animate	TargetBG 	        Alpha		"255"		        Accel 0.0 0.0
+	Animate	TargetBG 	        Alpha		"255"		        Accel 0.3 0.6
+	
+	RunEvent HudHealthDyingPulseLoop	0.25
+}
+
+// call to loop HudHealthDyingPulse
+event HudHealthDyingPulseLoop
+{
+	RunEvent HudHealthDyingPulse 0.0
+}
+
+event HudHealthDyingPulseStop
+{
+	Animate PlayerStatusHealthValue			FgColor		"OmpHP"		Accel 0.0 0.0
+	
+	Animate	TargetBG 	         BgColor		"OmpSpecHP"	       Accel 0.0 0.0
+    Animate	TargetBG 	         Alpha		    "0"		           Accel 0.0 0.0
+	
+	StopEvent HudHealthDyingPulse 0.0
+	StopEvent HudHealthDyingPulseLoop 0.0
+}
+
+event HudLowAmmoPulse
+{
+	Animate	HudWeaponLowAmmoImage		Alpha		"255"		Linear 0.0 0.075
+	Animate	HudWeaponLowAmmoImage		Alpha		"0"			Linear 0.125 0.075
+	
+	//Animate AmmoInClip			FgColor		"OmpAmmoClipLow1"	Linear 0.0 0.075
+	//Animate AmmoInClip			FgColor		"OmpAmmoClipLow2"	Linear 0.125 0.075
+
+	//Animate AmmoInReserve		FgColor		"OmpAmmoReserveLow1"	Linear 0.0 0.075
+	//Animate AmmoInReserve		FgColor		"OmpAmmoReserveLow2"	Linear 0.125 0.075
+
+	//Animate AmmoNoClip			FgColor		"OmpAmmoClipLow1"	Linear 0.0 0.075
+	//Animate AmmoNoClip			FgColor		"OmpAmmoClipLow2"	Linear 0.125 0.075
+
+	RunEvent HudLowAmmoPulseLoop	0.25
+}
+
+// call to loop HudLowAmmoPulse
+event HudLowAmmoPulseLoop
+{
+	RunEvent HudLowAmmoPulse 0.0
+}
+
+event HudLowAmmoPulseStop
+{
+	StopEvent HudLowAmmoPulse 0.0
+	StopEvent HudLowAmmoPulseLoop 0.0
+
+	//Animate AmmoInClip		FgColor		"OmpAmmoClip"		Accel 0.0 0.0
+	//Animate AmmoInReserve	FgColor		"OmpAmmoReserve"	Accel 0.0 0.0
+	//Animate AmmoNoClip		FgColor		"OmpAmmoClip"		Accel 0.0 0.0
+}
+
+event FlagOutlineHide
+{
+	Animate OutlineImage	Alpha		"0"				Linear 0.0 0.1
+}
+
+// Local player flag pickup/drop
+event FlagOutline
+{
+	RunEvent FlagOutlineHide 0.0
+	Animate OutlineImage	Alpha		"255"			Linear 0.1 0.2
+	
+	Animate OutlineImage	Position	"c-200 140"		Linear 0.1 0.2
+	Animate OutlineImage	Size		"400 200"		Linear 0.1 0.2
+
+	Animate OutlineImage	Position	"c0 r38"		Linear 0.7 0.2
+	Animate OutlineImage	Size		"0 0"			Linear 0.7 0.2
+	
+	Animate OutlineImage	Alpha		"0"				Linear 0.9 0.1
+}
+
+event HudSpyDisguiseFadeIn
+{
+	//RunEvent HudSpyDisguiseChanged	0
+	//Animate PlayerStatusSpyImage			Alpha		"255"			Linear 0.9 0.1	
+	
+	// omp -- uncomment following lines for spy disguise image.
+	//Animate PlayerStatusClassImage			Alpha		"255"			Linear 0.0 0.0
+	//Animate classmodelpanel					Position	"10 r154"		Linear 0.0 0.0
+}
+
+event HudSpyDisguiseFadeOut
+{
+	//RunEvent HudSpyDisguiseChanged	0
+	//Animate PlayerStatusSpyImage			Alpha		"0"				Linear 0.9 0.1	
+	
+	// omp -- uncomment following lines for spy disguise image.
+	//Animate PlayerStatusClassImage			Alpha		"0"				Linear 0.0 0.0
+	//Animate classmodelpanel					Position	"9999 9999"		Linear 0.0 0.0
+}
+
+event HudTournamentSetupPanelOpen
+{
+	Animate HudTournamentSetup	Position	"c-60 -72"	Linear 0.0 0.001
+	Animate HudTournamentSetup	Position	"c-60 60"	Spline 0.001 0.2
+}
+
+event HudTournamentSetupPanelClose
+{
+	Animate HudTournamentSetup	Position	"c-60 60"	Linear 0.0 0.001
+	Animate HudTournamentSetup	Position	"c-60 -72"	Spline 0.001 0.2
+}
+
+event HudMedicCharged
+{
+	Animate	ChargeLabel 	FgColor		"OmpMedicCharge1"		Linear 0.0 0.1
+	Animate	ChargeLabel 	FgColor		"OmpMedicCharge2"		Linear 0.3 0.4
+	
+	Animate	ChargeMeter 	FgColor		"OmpMedicCharge1"		Linear 0.0 0.1
+	Animate	ChargeMeter 	FgColor		"OmpMedicCharge2"		Linear 0.3 0.4
+
+	RunEvent HudMedicChargedLoop	0.6
+}
+
+// call to loop HudHealthBonusPulse
+event HudMedicChargedLoop
+{
+	RunEvent HudMedicCharged 0.0
+}
+
+event HudMedicChargedStop
+{
+	StopEvent HudMedicCharged 0.0
+	StopEvent HudMedicChargedLoop 0.0
+	
+	Animate	ChargeLabel 	FgColor		"OmpAmmoClip"		Linear 0.0 0.0001
+	Animate	ChargeMeter 	FgColor		"255 255 255 255"		Linear 0.0 0.0001
+}
+
+event TeamStatus_PlayerDead
+{
+	SetVisible DeathPanel  1 0
+	Animate DeathPanel ypos 8 Accel 0 0.2
+	Animate respawntime ypos 0 Accel 0 0.2
+}
+
+event TeamStatus_PlayerAlive
+{
+	Animate DeathPanel ypos 0 Accel 0 0.2
+	Animate respawntime ypos 0 Accel 0 0.2
+	SetVisible DeathPanel  0 0.2
+}
+
+event WinPanel_CompPos
+{
+    Animate WinPanel ypos r132 Linear 0 0
+}
+
+event WinPanel_NormalPos
+{
+    Animate WinPanel ypos r132 Linear 0 0
+}
+
+event MMenu_PlayList_Expand
+{
+	Animate OmphudLabel	  	  Xpos -180	 Spline	0.0 0.40
+	Animate FindAGameButton	  Xpos -100	 Spline	0.0 0.40
+	Animate CreateServerButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate CharacterSetupButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate GeneralStoreButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate ReplayBrowserButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate SteamWorkshopButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate SettingsButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate TF2SettingsButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate QuitButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate DisconnectButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate NewUserForumsButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate AchievementsButton  	  Xpos -100	 Spline	0.0 0.40
+	Animate CommentaryButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate CoachPlayersButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate ReportBugButton	  	  Xpos -100	 Spline	0.0 0.40
+	Animate CallVoteButton		  Xpos -100	 Spline	0.0 0.40
+	Animate MutePlayersButton	  Xpos -100	 Spline	0.0 0.40
+	Animate RequestCoachButton	  Xpos -100	 Spline	0.0 0.40
+	Animate ReportPlayerButton	  Xpos -100	 Spline	0.0 0.40
+	Animate PlayListContainer Wide 180	 Spline	0.0 0.40
+
+	FireCommand 0 "soundentry Panel.SlideDown"
+}
+
+event MMenu_PlayList_Collapse
+{
+	Animate OmphudLabel	  	  Xpos 0	 Spline	0.0 0.40
+	Animate FindAGameButton	  Xpos 40	 Spline	0.0 0.40
+	Animate CreateServerButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate CharacterSetupButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate GeneralStoreButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate ReplayBrowserButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate SteamWorkshopButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate SettingsButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate TF2SettingsButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate QuitButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate DisconnectButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate NewUserForumsButton	  	  Xpos 35	 Spline	0.0 0.40
+	Animate AchievementsButton  	  Xpos 57	 Spline	0.0 0.40
+	Animate CommentaryButton	  	  Xpos 79	 Spline	0.0 0.40
+	Animate CoachPlayersButton	  	  Xpos 101	 Spline	0.0 0.40
+	Animate ReportBugButton	  	  Xpos 123	 Spline	0.0 0.40
+	Animate CallVoteButton		  Xpos 68	 Spline	0.0 0.40
+	Animate MutePlayersButton	  Xpos 90	 Spline	0.0 0.40
+	Animate RequestCoachButton	  Xpos 46	 Spline	0.0 0.40
+	Animate ReportPlayerButton	  Xpos 112	 Spline	0.0 0.40
+	Animate PlayListContainer Wide 0 Spline 0 0.4
+
+	FireCommand 0 "soundentry Panel.SlideUp"
+}
+
+event MMenu_PlayList_Collapse_Immediate
+{
+	Animate OmphudLabel	  	  Xpos 0	 Spline	0.0 0.40
+	Animate FindAGameButton	  Xpos 40	 Spline	0.0 0.40
+	Animate CreateServerButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate CharacterSetupButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate GeneralStoreButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate ReplayBrowserButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate SteamWorkshopButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate SettingsButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate TF2SettingsButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate QuitButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate DisconnectButton	  	  Xpos 40	 Spline	0.0 0.40
+	Animate NewUserForumsButton	  	  Xpos 35	 Spline	0.0 0.40
+	Animate AchievementsButton  	  Xpos 57	 Spline	0.0 0.40
+	Animate CommentaryButton	  	  Xpos 79	 Spline	0.0 0.40
+	Animate CoachPlayersButton	  	  Xpos 101	 Spline	0.0 0.40
+	Animate ReportBugButton	  	  Xpos 123	 Spline	0.0 0.40
+	Animate CallVoteButton		  Xpos 68	 Spline	0.0 0.40
+	Animate MutePlayersButton	  Xpos 90	 Spline	0.0 0.40
+	Animate RequestCoachButton	  Xpos 46	 Spline	0.0 0.40
+	Animate ReportPlayerButton	  Xpos 112	 Spline	0.0 0.40
+	Animate PlayListContainer Wide 0 Spline 0 0.4
+}
+
+event CasualCategory_Checkbox_Hide
+{
+	Animate Checkbutton xpos 350 Deaccel 0 0.2
+	Animate Title		xpos 215 Deaccel 0 0.2
+	Animate TitleShadow	xpos 216 Deaccel 0 0.2
+	Animate DescLabel	xpos 215 Deaccel 0 0.2
+	Animate DescLabelShadow	xpos 216 Deaccel 0 0.2
+
+	//Animate Title		FgColor TanDark Deaccel 0 0.2
+}
+
+event CasualCategory_Checkbox_Show
+{
+	Animate Checkbutton xpos 5 Deaccel 0 0.2
+	Animate Title		xpos 20 Deaccel 0 0.2
+	Animate TitleShadow	xpos 21 Deaccel 0 0.2
+	Animate DescLabel	xpos 10 Deaccel 0 0.2
+	Animate DescLabelShadow	xpos 11 Deaccel 0 0.2
+
+	//Animate Title		FgColor TanLight Deaccel 0 0.2
+}
+
+event ScopeRemoval
+{
+	Animate HudScope Position	"9999 9999" Linear 0.0 0.0
+}
+
+event DamagedPlayer
+{
+	RunEvent ScopeRemoval 0.0
+}
