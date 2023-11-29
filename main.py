@@ -161,7 +161,7 @@ async def main(rcon, logfile, dxc=None):
     curr_class = ""
     curr_weapon = -1
 
-    vibe = vibration_handler.VibrationHandler(logging)
+    vibe = vibration_handler.VibrationHandler(logging, rcon)
 
     while True:
         # detect kills & class / weapon switches from console log
