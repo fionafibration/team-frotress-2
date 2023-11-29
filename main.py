@@ -67,7 +67,7 @@ else:
     exit()
 
 
-def uber_image_grabber(dxc=None, n=10, percentile=False):
+def uber_image_grabber(dxc=None):
     if platform == "Linux":
         return ImageGrab.grab(full_bar_region)
     elif platform == "Windows":
@@ -99,7 +99,7 @@ def uber_percentage_grabber(dxc):
             cocount += 1
 
     # Check to ensure nothing is occluding our
-    if count + cocount != 337:
+    if count + cocount != bar_width - 3:
         return None
 
     uber_percent = count / (bar_width - 3)
