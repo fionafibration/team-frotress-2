@@ -7,23 +7,41 @@ import sys
 import os
 import platform
 import pytesseract
-import dxcam
+#import dxcam
 import random
 
 from PIL import ImageGrab, Image
 
-from buttplug import *
+# from buttplug import *
 
 platform = platform.system()
 
-# Checking resolution
+# Checking resolution and setting screenshot regions for uber bar
 if platform == 'Linux':
     resolution_raw = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0].split()[0].split(b'x')
-    resolution = (int(resolution[0].decode('UTF-8')),int(resolution[1].decode('UTF-8'))) 
+    resolution = (int(resolution_raw[0].decode('UTF-8')),int(resolution_raw[1].decode('UTF-8')))
+    if resolution == (1920,1080):           
+        bar_center = (960,744)
+        bar_width = 340
+        bar_height = 16
+        bar_left = bar_center[0]-bar_width/2
+        bar_right = bar_center[0]+bar_width/2
+        bar_top = bar_center[1]-bar_height/2
+        bar_bottom = bar_center[1]+bar_height/2
+        bar_tenth = bar_width/10
+        full_bar_region = (bar_left, bar_top, bar_right, bar_bottom)
+    elif resolution == (2560, 1440):
+        # TODO
+        pass
+    else:
+        logging.error("Detected incompatible resolution! \
+                Currently supported resolutions are:\n1920x1080 and 2560x1440")
 elif platform == 'Windows':
+    # TODO
     resolution = (2560,1440)
 else:
-    logging.error("Detected incompatible operating system! Currently supported operating systems are:\nLinux and Windows")
+    logging.error("Detected incompatible operating system! \
+            Currently supported operating systems are:\nLinux and Windows")
 
 
 UBER_ACTIVE_STRENGTH = 0.2
@@ -31,43 +49,46 @@ UBER_THRESHOLD_BUZZ = 0.3
 
 rcon_port = 2541
 
-def uber_image_grabber():
-    if platform == 'Linux':
-        # Setting screenshot region for Linux
-        if resolution == (1920, 1080):
-            ss_region = (1200,700,1500,900)
-        elif resolution == (2560, 1440):
-            ss_region = (1210, 1070, 1350, 1125)
-        else
-            logging.error("Detected incompatible resolution! Currently supported resolutions are:\n1920x1080 and 2560x1440")
-        # Taking the screenshot
-        return ImageGrab.grab(ss_region)
-    elif platform == 'Windows':
-        # TODO
+def uber_image_grabber(n=10, percentile=False):
+    """
+    INPUT: 
+        n=9
+            An integer, specifies which tenth is of interest. 
+            Defaults to 10, the last tenth.
+        percentile=False
+            A Boolean, specifies whether tenth is stopping point or not.
+            For example, (n=5, percintile=False) screenshots the first half
+            but (n=5, percentile=True) screenshots only the 40-49 region
+        
+    """
+    if percentile:
+       return ImageGrab.grab(bar_left + tenth*(n-1), top, left + tenth*(n), bottom)
+    else:
+        return ImageGrab.grab(full_bar_region)
 
-
-# Creating the pixel dictionary
-# TODO
+"""
+Creating the pixel dictionary.
+Keys are the percentiles, values are their pixel ranges.
+"""
 number_pixel_dict = {
-    0:[] 
-    10:[]
-    20:[]
-    30:[]
-    40:[]
-    50:[]
-    60:[]
-    70:[]
-    80:[]
-    90:[]
-    100:[]
+    1:  [0, 0], 
+    2:  [0, 0],
+    3:  [0, 0],
+    4:  [0, 0],
+    5:  [0, 0],
+    6:  [0, 0],
+    7:  [0, 0],
+    8:  [0, 0],
+    9:  [0, 0],
+    10: [0, 0],
 }
+for i in range(10):
+    number_pixel_dict[i+1] = [bar_left+bar_tenth*(i), bar_left++bar_tenth*(i+1)]
 
 
 def uber_percentage_grabber(dxc=None):
     if platform == 'Linux':
-        img = ImageGrab.grab(ss_region)
-        px = img.load()
-        # TODO
+        img = uber_image_grabber()
 
     elif platform == 'Windows':
         frame = dxc.grab(region=(x, y, x + xoff, y + yoff))
@@ -95,9 +116,13 @@ def uber_percentage_grabber(dxc=None):
                 print("no %")
         return None
 
-
-tf2_game_executable = "E:\\Programs\\Steam\\steamapps\\common\\Team Fortress 2\\hl2.exe"
-# TODO: Linux directory
+if platform == 'Linux':
+    tf2_game_executable = "/home/dani/.local/share/Steam/steamapps/common/Team Fortress 2/hl2.sh"
+elif platform == 'Windows':
+    tf2_game_executable = "E:\\Programs\\Steam\\steamapps\\common\\Team Fortress 2\\hl2.exe"
+else:
+    logging.error("Detected incompatible operating system! \
+            Currently supported operating systems are:\nLinux and Windows")
 
 async def main():
     client = Client("TF2 Healsluttery")
