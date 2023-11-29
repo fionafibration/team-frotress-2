@@ -8,7 +8,10 @@ class LogTail:
         self.buffer = ""
 
     def read_line(self):
-        temp = self.f.readline()
+        try:
+            temp = self.f.readline()
+        except UnicodeDecodeError:
+            return None
         if temp != "":
             self.buffer += temp
             if self.buffer.endswith("\n"):

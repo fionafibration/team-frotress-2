@@ -76,12 +76,12 @@ class VibrationHandler:
         vibe_strength = self.update()
 
         await devices[0].actuators[0].command(vibe_strength)
-        # await devices[0].actuators[1].command(vibe_strength * 0.5)
+        await devices[0].actuators[1].command(vibe_strength * 0.5)
         #
         # to set all actuators:
         #
-        # for device in devices:
-        #     for actuator in device.actuators:
-        #         await actuator.command(vibe_strength)
+        for device in devices.values():
+             for actuator in device.actuators:
+                 await actuator.command(vibe_strength)
         #
         # etc.

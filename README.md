@@ -1,4 +1,4 @@
-# tf2-buttplug
+# Team Frotress 2
 
 Controls buttplug based on kills, deaths, and uber in Team Fortress 2
 
