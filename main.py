@@ -246,7 +246,7 @@ if __name__ == "__main__":
     if platform == "Windows":
         tf2_args = [TF2_GAME_EXECUTABLE]
     else:
-        tf2_args = ["steam -applaunch 440 "]
+        tf2_args = ["steam", "-applaunch", "440"]
 
     added_args = (
             " -game tf -steam -secure -usercon +developer 1 +alias developer +ip 0.0.0.0 +alias ip +sv_rcon_whitelist_address 127.0.0.1 +alias sv_rcon_whitelist_address +rcon_password " + rcon_password + " +alias rcon_password +hostport " + str(
