@@ -34,14 +34,14 @@ class VibrationHandler:
         # [0, 1]
         killstreak_coeff = min(self.killstreak, KILLSTREAK_MAX) / (KILLSTREAK_MAX)
 
-        self.timed_buzz(KILL_STRENGTH *
-                        # [1, KILLSTREAK_STRENGTH_MULTIPLIER]
-                        (killstreak_coeff * (KILLSTREAK_STRENGTH_MULTIPLIER - 1.0) + 1.0) *
-                        KILL_CRIT_STRENGTH_MULTIPLIER if crit else 1.0,
-                        KILL_TIME *
-                        # [1, KILLSTREAK_TIME_MULTIPLIER]
-                        (killstreak_coeff * (KILLSTREAK_TIME_MULTIPLIER - 1.0) + 1.0) *
-                        KILL_CRIT_TIME_MULTIPLIER if crit else 1.0)
+        strength = KILL_STRENGTH * \
+                   (killstreak_coeff * (KILLSTREAK_STRENGTH_MULTIPLIER - 1.0) + 1.0) * \
+                   (KILL_CRIT_STRENGTH_MULTIPLIER if crit else 1.0)
+        time = KILL_TIME * \
+               (killstreak_coeff * (KILLSTREAK_TIME_MULTIPLIER - 1.0) + 1.0) * \
+               (KILL_CRIT_TIME_MULTIPLIER if crit else 1.0)
+
+        self.timed_buzz(strength, time)
 
     def uber_milestone(self, uber_percent, last_uber_percent):
         for i, x in enumerate(UBER_MILESTONES):
@@ -76,13 +76,11 @@ class VibrationHandler:
 
         self.timed_buzzes = list(filter(lambda x: x[1] > now, self.timed_buzzes))
 
-        print(self.current_strength, self.last_strength)
-
-        if self.current_strength > BASE_VIBE and self.last_strength <= BASE_VIBE:
+        if self.current_strength > BASE_VIBE >= self.last_strength:
             if ACTIVATE_COMMAND != "":
                 self.logger.info("Running activate command")
                 self.rcon.execute(ACTIVATE_COMMAND)
-        if self.current_strength <= BASE_VIBE and self.last_strength > BASE_VIBE:
+        if self.current_strength <= BASE_VIBE < self.last_strength:
             if DEACTIVATE_COMMAND != "":
                 self.logger.info("Running deactivate command")
                 self.rcon.execute(DEACTIVATE_COMMAND)

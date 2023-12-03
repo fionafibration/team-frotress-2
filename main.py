@@ -103,7 +103,6 @@ def uber_percentage_grabber(dxc):
         return None
 
     uber_percent = count / (bar_width - 3)
-    print(uber_percent)
     uber_percent = round(uber_percent * 100)
     if 0 <= uber_percent <= 100:
         return uber_percent
@@ -246,11 +245,11 @@ if __name__ == "__main__":
     if platform == "Windows":
         tf2_args = [TF2_GAME_EXECUTABLE]
     else:
-        tf2_args = ["steam", "-applaunch", "440"]
+        tf2_args = ["~/.steam/bin32/steam-runtime/run.sh", TF2_GAME_EXECUTABLE]
 
     added_args = (
             " -game tf -steam -secure -usercon +developer 1 +alias developer +ip 0.0.0.0 +alias ip +sv_rcon_whitelist_address 127.0.0.1 +alias sv_rcon_whitelist_address +rcon_password " + rcon_password + " +alias rcon_password +hostport " + str(
-        RCON_PORT) + " +alias hostport +alias cl_reload_localization_files +net_start  +con_timestamp 1 +alias con_timestamp -condebug -conclearlog" + TF2_EXTRA_LAUNCH_OPTIONS).split()
+        RCON_PORT) + " +alias hostport +alias cl_reload_localization_files +net_start +con_timestamp 1 +alias con_timestamp -condebug -conclearlog " + TF2_EXTRA_LAUNCH_OPTIONS).split()
     tf2_args.extend(added_args)
 
     subprocess.Popen(tf2_args)
