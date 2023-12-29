@@ -25,6 +25,8 @@ folder)
 If you want medic functionality, install OMPHUD-sexy on your game, make sure every class config has `$classname` in it somewhere, i.e. medic.cfg has a
 line `$medic`, heavyweapons.cfg has a line `$heavyweapons`. 
 
+Note that usernames with non-ascii characters cannot be used at the moment.
+
 # Customising for multiple devices/motors
 
 Edit the run_buzz method in vibration_handler.py to your liking
