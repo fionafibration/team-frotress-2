@@ -27,6 +27,7 @@ if not os.path.isfile("config.py"):
 
 # Checking resolution and setting screenshot regions for uber bar
 # Currently WIP, want to add 2560x1440 support but for now its hardcoded to 1920x1080
+medic_uber_support = True
 if platform == 'Linux':
     resolution_raw = \
         subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4', shell=True, stdout=subprocess.PIPE).communicate()[
@@ -44,14 +45,16 @@ if platform == 'Linux':
         bar_tenth = bar_width // 10
         full_bar_region = (bar_left, bar_top, bar_right, bar_bottom)
     elif resolution == (2560, 1440):
+        medic_uber_support = False
         print("Detected incompatible resolution! \
-                        Currently supported resolutions are:\n1920x1080")
-        exit()
+                        Currently supported resolutions are:\n1920x1080\nMedic Uber Charge functionality will not work")
     else:
+        medic_uber_support = False
         print("Detected incompatible resolution! \
-                Currently supported resolutions are:\n1920x1080")
-        exit()
+                Currently supported resolutions are:\n1920x1080\nMedic Uber Charge functionality will not work")
+# This does not check for resolution and really should
 elif platform == 'Windows':
+    print("Detected Windows OS. If your resolution is not 1920x1080, Medic Uber Charge functionality will not work.")
     bar_center = (960, 744)
     bar_width = 340
     bar_height = 16
@@ -193,7 +196,7 @@ async def main(rcon, logfile, dxc=None):
                     logging.info("Death logged")
                     vibe.death()
 
-        if curr_class == "medic" and curr_weapon == 2 or curr_weapon == 3:
+        if curr_class == "medic" and medic_uber_support and (curr_weapon == 2 or curr_weapon == 3):
             uber_grabbed = uber_percentage_grabber(dxc)
             # logging.info(f"New uber: {uber_grabbed}")
         else:
