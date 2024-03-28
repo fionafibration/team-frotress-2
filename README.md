@@ -19,7 +19,7 @@ WARNING - Use only in private lobbies / servers with consenting players, and tes
 
 # Setup
 
-Copy config_default.py to config.py and fill out your game executable and console.log paths (console.log will be in tf
+Copy config_default.py to config.py (you will have to create this file in the same directory as config_default.py) and fill out your game executable and console.log paths (console.log will be in tf
 folder)
 
 If you want medic functionality, install OMPHUD-sexy on your game, make sure every class config has `$classname` in it somewhere, i.e. medic.cfg has a
